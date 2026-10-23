@@ -1,0 +1,5 @@
+# audit.sh needs only bash and standard Linux tools.
+# report_html.py uses only the Python standard library.
+# Development / testing:
+pytest>=7.0
+shellcheck-py>=0.9   # provides the shellcheck binary for the lint test
