@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linux Security Audit - (none)</title>
+<style>
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem auto; max-width: 1000px; color: #222; padding: 0 1rem; }
+  h1 { margin-bottom: .2rem; }
+  .meta { color: #555; margin-bottom: 1.5rem; }
+  .cards { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0 2rem; }
+  .card { border: 1px solid #ddd; border-radius: 8px; padding: .8rem 1.2rem; min-width: 110px; }
+  .card .n { font-size: 1.8rem; font-weight: 700; }
+  .bar { background: #eee; border-radius: 6px; height: 14px; overflow: hidden; }
+  .bar div { height: 100%; background: #c62828; width: 15%; }
+  table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+  th, td { border-bottom: 1px solid #e5e5e5; padding: .5rem; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  .badge { color: #fff; border-radius: 4px; padding: 1px 7px; font-size: .78rem; font-weight: 700; }
+  li { margin-bottom: .8rem; }
+  footer { margin-top: 2rem; color: #777; font-size: .85rem; }
+</style>
+</head>
+<body>
+<h1>Linux Security Audit</h1>
+<div class="meta">Host <code>(none)</code> &middot; Ubuntu 22.04.4 LTS (demo)
+ (kernel 6.12.110+) &middot; 2026-10-23 07:33 UTC &middot; mode: partial (not root)</div>
+
+<h2>Score: 15 / 100 &mdash; grade D (high risk)</h2>
+<div class="bar"><div></div></div>
+<div class="cards">
+  <div class="card"><div class="n" style="color:#1a7f37">0</div>PASS</div>
+  <div class="card"><div class="n" style="color:#b26b00">4</div>WARN</div>
+  <div class="card"><div class="n" style="color:#c62828">9</div>FAIL</div>
+  <div class="card"><div class="n" style="color:#0b6bcb">1</div>INFO</div>
+</div>
+
+<h2>Results</h2>
+<table>
+<tr><th>Status</th><th>ID</th><th>CIS</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class="badge" style="background:#c62828">FAIL</span></td><td>SSH-1</td><td>5.2.10</td><td>SSH root login allowed</td><td>PermitRootLogin is &#x27;yes&#x27;.</td></tr>
+<tr><td><span class="badge" style="background:#b26b00">WARN</span></td><td>SSH-2</td><td>5.2.x</td><td>SSH password login enabled</td><td>PasswordAuthentication is &#x27;yes&#x27;. Passwords can be brute-forced.</td></tr>
+<tr><td><span class="badge" style="background:#b26b00">WARN</span></td><td>SSH-3</td><td>5.2.7</td><td>SSH MaxAuthTries too high</td><td>MaxAuthTries is 6 (CIS recommends 4 or less).</td></tr>
+<tr><td><span class="badge" style="background:#c62828">FAIL</span></td><td>FW-1</td><td>3.5.1</td><td>Firewall (ufw) is inactive</td><td>ufw is installed but not enabled.</td></tr>
+<tr><td><span class="badge" style="background:#c62828">FAIL</span></td><td>UPD-1</td><td>1.9</td><td>Security updates pending</td><td>3 package(s) can be upgraded, 2 from security repositories.</td></tr>
+<tr><td><span class="badge" style="background:#c62828">FAIL</span></td><td>USR-1</td><td>6.2.x</td><td>Extra accounts with UID 0</td><td>These accounts have full root rights: toor</td></tr>
+<tr><td><span class="badge" style="background:#c62828">FAIL</span></td><td>USR-2</td><td>6.2.1</td><td>Accounts with empty passwords</td><td>Accounts anyone can log in to without a password: guest</td></tr>
+<tr><td><span class="badge" style="background:#c62828">FAIL</span></td><td>PERM-1</td><td>6.1.x</td><td>/etc/shadow is world-accessible</td><td>Permissions are 644: any user can read the password hashes.</td></tr>
+<tr><td><span class="badge" style="background:#c62828">FAIL</span></td><td>PERM-2</td><td>1.1.x</td><td>/tmp is missing the sticky bit</td><td>Any user can delete or replace other users&#x27; files in /tmp.</td></tr>
+<tr><td><span class="badge" style="background:#c62828">FAIL</span></td><td>PERM-3</td><td>6.1.9</td><td>World-writable files in system folders</td><td>1 file(s), e.g. /etc/cron.d/backup</td></tr>
+<tr><td><span class="badge" style="background:#0b6bcb">INFO</span></td><td>NET-1</td><td>2.x</td><td>Listening TCP services: 5</td><td>0.0.0.0:22 0.0.0.0:23 :::443 0.0.0.0:3306 127.0.0.1:8080</td></tr>
+<tr><td><span class="badge" style="background:#c62828">FAIL</span></td><td>NET-2</td><td>2.2.x</td><td>Insecure clear-text service exposed</td><td>Risky ports listening on the network: 23 3306</td></tr>
+<tr><td><span class="badge" style="background:#b26b00">WARN</span></td><td>PWD-1</td><td>5.5.1.2</td><td>Passwords never expire (or expiry &gt; 365 days)</td><td>PASS_MAX_DAYS is 99999.</td></tr>
+<tr><td><span class="badge" style="background:#b26b00">WARN</span></td><td>PWD-2</td><td>5.4.1</td><td>Weak minimum password length</td><td>pwquality minlen is 8.</td></tr>
+</table>
+
+<h2>Remediation steps</h2>
+<ol>
+<li><span class="badge" style="background:#c62828">FAIL</span> <strong>SSH root login allowed</strong> <small>(SSH-1, CIS 5.2.10)</small><br>Set &#x27;PermitRootLogin no&#x27; in /etc/ssh/sshd_config, then run: sudo systemctl reload ssh</li>
+<li><span class="badge" style="background:#c62828">FAIL</span> <strong>Firewall (ufw) is inactive</strong> <small>(FW-1, CIS 3.5.1)</small><br>Allow what you need first (e.g. sudo ufw allow OpenSSH), then: sudo ufw enable</li>
+<li><span class="badge" style="background:#c62828">FAIL</span> <strong>Security updates pending</strong> <small>(UPD-1, CIS 1.9)</small><br>Run: sudo apt update &amp;&amp; sudo apt upgrade. Consider enabling unattended-upgrades.</li>
+<li><span class="badge" style="background:#c62828">FAIL</span> <strong>Extra accounts with UID 0</strong> <small>(USR-1, CIS 6.2.x)</small><br>Investigate immediately (possible backdoor). Remove the account or give it a normal UID: sudo usermod -u &lt;new_uid&gt; &lt;user&gt;</li>
+<li><span class="badge" style="background:#c62828">FAIL</span> <strong>Accounts with empty passwords</strong> <small>(USR-2, CIS 6.2.1)</small><br>Lock them (sudo passwd -l &lt;user&gt;) or set a strong password (sudo passwd &lt;user&gt;).</li>
+<li><span class="badge" style="background:#c62828">FAIL</span> <strong>/etc/shadow is world-accessible</strong> <small>(PERM-1, CIS 6.1.x)</small><br>Run: sudo chown root:shadow /etc/shadow &amp;&amp; sudo chmod 640 /etc/shadow</li>
+<li><span class="badge" style="background:#c62828">FAIL</span> <strong>/tmp is missing the sticky bit</strong> <small>(PERM-2, CIS 1.1.x)</small><br>Run: sudo chmod 1777 /tmp</li>
+<li><span class="badge" style="background:#c62828">FAIL</span> <strong>World-writable files in system folders</strong> <small>(PERM-3, CIS 6.1.9)</small><br>Any user could change these files. Remove the write bit: sudo chmod o-w &lt;file&gt;</li>
+<li><span class="badge" style="background:#c62828">FAIL</span> <strong>Insecure clear-text service exposed</strong> <small>(NET-2, CIS 2.2.x)</small><br>Telnet (23) and FTP (21) send passwords in clear text. Remove them (e.g. sudo apt purge telnetd vsftpd) and use SSH/SFTP.</li>
+<li><span class="badge" style="background:#b26b00">WARN</span> <strong>SSH password login enabled</strong> <small>(SSH-2, CIS 5.2.x)</small><br>Set up SSH keys (ssh-keygen, ssh-copy-id), test them, then set &#x27;PasswordAuthentication no&#x27; and reload ssh. Consider fail2ban.</li>
+<li><span class="badge" style="background:#b26b00">WARN</span> <strong>SSH MaxAuthTries too high</strong> <small>(SSH-3, CIS 5.2.7)</small><br>Set &#x27;MaxAuthTries 4&#x27; in /etc/ssh/sshd_config and reload ssh.</li>
+<li><span class="badge" style="background:#b26b00">WARN</span> <strong>Passwords never expire (or expiry &gt; 365 days)</strong> <small>(PWD-1, CIS 5.5.1.2)</small><br>Set &#x27;PASS_MAX_DAYS 365&#x27; in /etc/login.defs (applies to new users; use chage -M 365 &lt;user&gt; for existing ones).</li>
+<li><span class="badge" style="background:#b26b00">WARN</span> <strong>Weak minimum password length</strong> <small>(PWD-2, CIS 5.4.1)</small><br>Install libpam-pwquality and set &#x27;minlen = 14&#x27; in /etc/security/pwquality.conf.</li>
+</ol>
+<footer>Generated by linux-security-audit. Read-only: no changes were made.
+CIS numbers refer loosely to the CIS Ubuntu Linux Benchmark and are a guide only.</footer>
+</body>
+</html>

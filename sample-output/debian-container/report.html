@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linux Security Audit - (none)</title>
+<style>
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem auto; max-width: 1000px; color: #222; padding: 0 1rem; }
+  h1 { margin-bottom: .2rem; }
+  .meta { color: #555; margin-bottom: 1.5rem; }
+  .cards { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0 2rem; }
+  .card { border: 1px solid #ddd; border-radius: 8px; padding: .8rem 1.2rem; min-width: 110px; }
+  .card .n { font-size: 1.8rem; font-weight: 700; }
+  .bar { background: #eee; border-radius: 6px; height: 14px; overflow: hidden; }
+  .bar div { height: 100%; background: #1a7f37; width: 80%; }
+  table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+  th, td { border-bottom: 1px solid #e5e5e5; padding: .5rem; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  .badge { color: #fff; border-radius: 4px; padding: 1px 7px; font-size: .78rem; font-weight: 700; }
+  li { margin-bottom: .8rem; }
+  footer { margin-top: 2rem; color: #777; font-size: .85rem; }
+</style>
+</head>
+<body>
+<h1>Linux Security Audit</h1>
+<div class="meta">Host <code>(none)</code> &middot; Debian GNU/Linux 13 (trixie)
+ (kernel 6.12.110+) &middot; 2026-10-23 07:32 UTC &middot; mode: full (root)</div>
+
+<h2>Score: 80 / 100 &mdash; grade B (good, a few gaps)</h2>
+<div class="bar"><div></div></div>
+<div class="cards">
+  <div class="card"><div class="n" style="color:#1a7f37">7</div>PASS</div>
+  <div class="card"><div class="n" style="color:#b26b00">2</div>WARN</div>
+  <div class="card"><div class="n" style="color:#c62828">1</div>FAIL</div>
+  <div class="card"><div class="n" style="color:#0b6bcb">2</div>INFO</div>
+</div>
+
+<h2>Results</h2>
+<table>
+<tr><th>Status</th><th>ID</th><th>CIS</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class="badge" style="background:#0b6bcb">INFO</span></td><td>SSH-0</td><td>5.2</td><td>SSH server not installed</td><td>No /etc/ssh/sshd_config found, so SSH checks were skipped.</td></tr>
+<tr><td><span class="badge" style="background:#c62828">FAIL</span></td><td>FW-1</td><td>3.5</td><td>No firewall tool found</td><td>Neither ufw nor iptables is installed.</td></tr>
+<tr><td><span class="badge" style="background:#1a7f37">PASS</span></td><td>UPD-1</td><td>1.9</td><td>No pending package updates</td><td>apt reports 0 upgradable packages (based on the last &#x27;apt update&#x27;).</td></tr>
+<tr><td><span class="badge" style="background:#1a7f37">PASS</span></td><td>USR-1</td><td>6.2.x</td><td>Only root has UID 0</td><td>No other accounts have UID 0.</td></tr>
+<tr><td><span class="badge" style="background:#1a7f37">PASS</span></td><td>USR-2</td><td>6.2.1</td><td>No accounts with empty passwords</td><td>Every account has a password or is locked.</td></tr>
+<tr><td><span class="badge" style="background:#1a7f37">PASS</span></td><td>PERM-1</td><td>6.1.x</td><td>/etc/shadow is not world-accessible</td><td>Permissions are 640.</td></tr>
+<tr><td><span class="badge" style="background:#1a7f37">PASS</span></td><td>PERM-2</td><td>1.1.x</td><td>/tmp has the sticky bit</td><td>Users cannot delete each other&#x27;s files in /tmp.</td></tr>
+<tr><td><span class="badge" style="background:#1a7f37">PASS</span></td><td>PERM-3</td><td>6.1.9</td><td>No world-writable files in system folders</td><td>Checked: etc bin sbin usr/bin usr/sbin usr/local/bin usr/local/sbin</td></tr>
+<tr><td><span class="badge" style="background:#0b6bcb">INFO</span></td><td>NET-1</td><td>2.x</td><td>Listening TCP services: 5</td><td>127.0.0.1:6061 127.0.0.1:6062 :::9100 127.0.0.1:9567 0.0.0.0:20000</td></tr>
+<tr><td><span class="badge" style="background:#1a7f37">PASS</span></td><td>NET-2</td><td>2.x</td><td>No high-risk services exposed</td><td>Ports open to the network: 9100 20000</td></tr>
+<tr><td><span class="badge" style="background:#b26b00">WARN</span></td><td>PWD-1</td><td>5.5.1.2</td><td>Passwords never expire (or expiry &gt; 365 days)</td><td>PASS_MAX_DAYS is 99999.</td></tr>
+<tr><td><span class="badge" style="background:#b26b00">WARN</span></td><td>PWD-2</td><td>5.4.1</td><td>Weak minimum password length</td><td>pwquality minlen is not set (default 8 or less).</td></tr>
+</table>
+
+<h2>Remediation steps</h2>
+<ol>
+<li><span class="badge" style="background:#c62828">FAIL</span> <strong>No firewall tool found</strong> <small>(FW-1, CIS 3.5)</small><br>Install a host firewall: sudo apt install ufw &amp;&amp; sudo ufw allow OpenSSH &amp;&amp; sudo ufw enable</li>
+<li><span class="badge" style="background:#b26b00">WARN</span> <strong>Passwords never expire (or expiry &gt; 365 days)</strong> <small>(PWD-1, CIS 5.5.1.2)</small><br>Set &#x27;PASS_MAX_DAYS 365&#x27; in /etc/login.defs (applies to new users; use chage -M 365 &lt;user&gt; for existing ones).</li>
+<li><span class="badge" style="background:#b26b00">WARN</span> <strong>Weak minimum password length</strong> <small>(PWD-2, CIS 5.4.1)</small><br>Install libpam-pwquality and set &#x27;minlen = 14&#x27; in /etc/security/pwquality.conf.</li>
+</ol>
+<footer>Generated by linux-security-audit. Read-only: no changes were made.
+CIS numbers refer loosely to the CIS Ubuntu Linux Benchmark and are a guide only.</footer>
+</body>
+</html>

@@ -1,0 +1,23 @@
+#host	(none)
+#os	Ubuntu 22.04.4 LTS (demo)
+#kernel	6.12.110+
+#date	2026-10-23 07:33 UTC
+#user	sandbox
+#mode	partial (not root)
+#score	15
+#grade	D (high risk)
+status	id	cis	title	detail	remediation
+FAIL	SSH-1	5.2.10	SSH root login allowed	PermitRootLogin is 'yes'.	Set 'PermitRootLogin no' in /etc/ssh/sshd_config, then run: sudo systemctl reload ssh
+WARN	SSH-2	5.2.x	SSH password login enabled	PasswordAuthentication is 'yes'. Passwords can be brute-forced.	Set up SSH keys (ssh-keygen, ssh-copy-id), test them, then set 'PasswordAuthentication no' and reload ssh. Consider fail2ban.
+WARN	SSH-3	5.2.7	SSH MaxAuthTries too high	MaxAuthTries is 6 (CIS recommends 4 or less).	Set 'MaxAuthTries 4' in /etc/ssh/sshd_config and reload ssh.
+FAIL	FW-1	3.5.1	Firewall (ufw) is inactive	ufw is installed but not enabled.	Allow what you need first (e.g. sudo ufw allow OpenSSH), then: sudo ufw enable
+FAIL	UPD-1	1.9	Security updates pending	3 package(s) can be upgraded, 2 from security repositories.	Run: sudo apt update && sudo apt upgrade. Consider enabling unattended-upgrades.
+FAIL	USR-1	6.2.x	Extra accounts with UID 0	These accounts have full root rights: toor	Investigate immediately (possible backdoor). Remove the account or give it a normal UID: sudo usermod -u <new_uid> <user>
+FAIL	USR-2	6.2.1	Accounts with empty passwords	Accounts anyone can log in to without a password: guest	Lock them (sudo passwd -l <user>) or set a strong password (sudo passwd <user>).
+FAIL	PERM-1	6.1.x	/etc/shadow is world-accessible	Permissions are 644: any user can read the password hashes.	Run: sudo chown root:shadow /etc/shadow && sudo chmod 640 /etc/shadow
+FAIL	PERM-2	1.1.x	/tmp is missing the sticky bit	Any user can delete or replace other users' files in /tmp.	Run: sudo chmod 1777 /tmp
+FAIL	PERM-3	6.1.9	World-writable files in system folders	1 file(s), e.g. /etc/cron.d/backup	Any user could change these files. Remove the write bit: sudo chmod o-w <file>
+INFO	NET-1	2.x	Listening TCP services: 5	0.0.0.0:22 0.0.0.0:23 :::443 0.0.0.0:3306 127.0.0.1:8080	Review this list and stop services you do not need: sudo systemctl disable --now <service>
+FAIL	NET-2	2.2.x	Insecure clear-text service exposed	Risky ports listening on the network: 23 3306	Telnet (23) and FTP (21) send passwords in clear text. Remove them (e.g. sudo apt purge telnetd vsftpd) and use SSH/SFTP.
+WARN	PWD-1	5.5.1.2	Passwords never expire (or expiry > 365 days)	PASS_MAX_DAYS is 99999.	Set 'PASS_MAX_DAYS 365' in /etc/login.defs (applies to new users; use chage -M 365 <user> for existing ones).
+WARN	PWD-2	5.4.1	Weak minimum password length	pwquality minlen is 8.	Install libpam-pwquality and set 'minlen = 14' in /etc/security/pwquality.conf.

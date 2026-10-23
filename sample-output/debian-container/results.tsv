@@ -1,0 +1,21 @@
+#host	(none)
+#os	Debian GNU/Linux 13 (trixie)
+#kernel	6.12.110+
+#date	2026-10-23 07:32 UTC
+#user	root
+#mode	full (root)
+#score	80
+#grade	B (good, a few gaps)
+status	id	cis	title	detail	remediation
+INFO	SSH-0	5.2	SSH server not installed	No /etc/ssh/sshd_config found, so SSH checks were skipped.	None needed.
+FAIL	FW-1	3.5	No firewall tool found	Neither ufw nor iptables is installed.	Install a host firewall: sudo apt install ufw && sudo ufw allow OpenSSH && sudo ufw enable
+PASS	UPD-1	1.9	No pending package updates	apt reports 0 upgradable packages (based on the last 'apt update').	Keep running 'sudo apt update && sudo apt upgrade' regularly.
+PASS	USR-1	6.2.x	Only root has UID 0	No other accounts have UID 0.	None needed.
+PASS	USR-2	6.2.1	No accounts with empty passwords	Every account has a password or is locked.	None needed.
+PASS	PERM-1	6.1.x	/etc/shadow is not world-accessible	Permissions are 640.	None needed.
+PASS	PERM-2	1.1.x	/tmp has the sticky bit	Users cannot delete each other's files in /tmp.	None needed.
+PASS	PERM-3	6.1.9	No world-writable files in system folders	Checked: etc bin sbin usr/bin usr/sbin usr/local/bin usr/local/sbin	None needed.
+INFO	NET-1	2.x	Listening TCP services: 5	127.0.0.1:6061 127.0.0.1:6062 :::9100 127.0.0.1:9567 0.0.0.0:20000	Review this list and stop services you do not need: sudo systemctl disable --now <service>
+PASS	NET-2	2.x	No high-risk services exposed	Ports open to the network: 9100 20000	None needed.
+WARN	PWD-1	5.5.1.2	Passwords never expire (or expiry > 365 days)	PASS_MAX_DAYS is 99999.	Set 'PASS_MAX_DAYS 365' in /etc/login.defs (applies to new users; use chage -M 365 <user> for existing ones).
+WARN	PWD-2	5.4.1	Weak minimum password length	pwquality minlen is not set (default 8 or less).	Install libpam-pwquality and set 'minlen = 14' in /etc/security/pwquality.conf.
